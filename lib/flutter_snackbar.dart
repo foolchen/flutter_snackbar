@@ -153,25 +153,30 @@ class SnackBarAnimation extends StatelessWidget {
     );
   }
 
+  // 准备动画
   void prepare(double deltaY) {
+    // 如果fade动画不存在，则创建一个新的fade动画
     fade = fade ??
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: controller,
             curve: Interval(0.0, 0.3, // 持续时间为总持续时间的30%
                 curve: Curves.ease)));
+    // 如果translate动画不存在，则创建一个新的translate动画
     translate = translate ??
-        Tween<double>(begin: -deltaY, end: 0).animate(
-            CurvedAnimation(parent: controller, curve: Interval(0.0, 0.15)));
+        Tween<double>(begin: -deltaY, end: 0).animate(CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.0, 0.15))); // 前15%的时间用于执行平移动画
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     return Transform.translate(
-      child: Opacity(child: child, opacity: fade != null ? fade.value : 0),
-      offset: Offset(0, translate != null ? translate.value : 0),
+      child: Opacity(child: child, opacity: fade != null ? fade.value : 0), // 此处使用fade.value不断取值来刷新child的opacity
+      offset: Offset(0, translate != null ? translate.value : 0),// 此处使用translate.value不断取值来刷新child的偏移量
     );
   }
 }
 
+/// 能够动态更新内容的[Text]
 class _DynamicText extends StatefulWidget {
   final TextBuilder _textBuilder;
   _DynamicText(this._textBuilder, {Key key}) : super(key: key);
