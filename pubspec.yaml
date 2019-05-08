@@ -1,8 +1,8 @@
 name: flutter_snackbar
 description: A new Flutter package project.
 version: 0.0.1
-author:
-homepage:
+author: foolchen <chenchong8806@gmail.com>
+homepage: https://github.com/foolchen/flutter_snackbar
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

@@ -1,6 +1,8 @@
 # flutter_snackbar
 
 使用这个库你可以实现类似于[SnackBar](https://flutter.dev/docs/cookbook/design/snackbars)类似的提示，不同的是`flutter_snackbar`的提示显示在顶部。
+效果如下：
+![flutter_snackbar](assets/flutter_snackbar.gif)
 
 ## Getting Started
 
