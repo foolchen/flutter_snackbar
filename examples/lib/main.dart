@@ -24,7 +24,7 @@ class SnackApp extends StatelessWidget {
                 ),
                 onTap: () {
                   _globalKey.currentState
-                      .showSnackBar("这是SnackBar count: ${count++}");
+                      .show("这是SnackBar count: ${count++}");
                 },
               ),
               Padding(
