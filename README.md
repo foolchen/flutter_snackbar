@@ -8,6 +8,8 @@
 ## 示例
 
 ```dart
+import 'package:flutter_snackbar/flutter_snackbar.dart';
+
 // 创建SnackBarWidget
 SnackBarWidget(
     // 绑定GlobalKey，用于调用显示/隐藏方法
