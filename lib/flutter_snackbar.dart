@@ -157,7 +157,7 @@ class SnackBarAnimation extends StatelessWidget {
     fade = fade ??
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: controller,
-            curve: Interval(0.0, 0.3, // 从0到15%
+            curve: Interval(0.0, 0.3, // 持续时间为总持续时间的30%
                 curve: Curves.ease)));
     translate = translate ??
         Tween<double>(begin: -deltaY, end: 0).animate(
