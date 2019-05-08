@@ -1,5 +1,5 @@
 name: flutter_snackbar
-description: A new Flutter package project.
+description: 自定义的SnackBar，在顶部显示。
 version: 0.0.1
 author: foolchen <chenchong8806@gmail.com>
 homepage: https://github.com/foolchen/flutter_snackbar
