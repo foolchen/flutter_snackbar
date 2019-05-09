@@ -3,6 +3,9 @@ library flutter_snackbar;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// 用于动态构建[Text]，以实现动态改变[SnackBarWidget]中内容的目的
+typedef TextBuilder = Text Function(String message);
+
 /// 用于展示类似于Android中SnackBar的提示框
 class SnackBarWidget extends StatefulWidget {
   /// 提示框中要显示的内容，提示内容不需要发生变化时使用
@@ -116,9 +119,6 @@ class SnackBarWidgetState extends State<SnackBarWidget>
   }
 }
 
-/// 用于动态构建[Text]，以实现动态改变[SnackBarWidget]中内容的目的
-typedef TextBuilder = Text Function(String message);
-
 class SnackBarAnimation extends StatelessWidget {
   final AnimationController controller;
   final Container child;
@@ -143,7 +143,8 @@ class SnackBarAnimation extends StatelessWidget {
   // 开始播放动画
   Future<Null> playAnimation() async {
     // 此处通过key去获取Widget的Size属性
-    var deltaY = (key as GlobalKey).currentContext.size.height; // 该值为位移动画需要的位移值
+    double deltaY =
+        (key as GlobalKey).currentContext.size.height; // 该值为位移动画需要的位移值
 
     // 如果fade动画不存在，则创建一个新的fade动画
     fade = fade ??
@@ -154,7 +155,8 @@ class SnackBarAnimation extends StatelessWidget {
 
     translate = translate ??
         Tween<double>(begin: -deltaY, end: 0).animate(CurvedAnimation(
-            parent: controller, curve: Interval(0.0, 0.15))); // 前15%的时间用于执行平移动画
+            parent: controller,
+            curve: Interval(0.0, 0.15, curve: Curves.ease))); // 前15%的时间用于执行平移动画
 
     try {
       await controller.forward().orCancel;

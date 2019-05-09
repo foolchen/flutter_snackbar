@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_snackbar/flutter_snackbar.dart';
 
-void main() => runApp(SnackApp());
+void main() => runApp(SnackBarApp());
 
-class SnackApp extends StatelessWidget {
+class SnackBarApp extends StatelessWidget {
   GlobalKey<SnackBarWidgetState> _globalKey = GlobalKey();
   int count = 0;
 
