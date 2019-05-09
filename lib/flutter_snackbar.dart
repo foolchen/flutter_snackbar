@@ -102,34 +102,19 @@ class SnackBarWidgetState extends State<SnackBarWidget>
     );
   }
 
-  /// 执行动画
+  /// 显示SnackBar
   /// [message] 要更新的提示内容
-  Future<Null> show([String message]) async {
+  void show([String message]) {
     if (_textKey != null && _textKey.currentState != null) {
       _textKey.currentState.update(message);
     }
-    _prepareAnimation();
-    try {
-      await _controller.forward().orCancel;
-      await _controller.reverse().orCancel;
-    } on TickerCanceled {}
+    (_snackKey.currentWidget as SnackBarAnimation).playAnimation();
   }
 
-  /// 使[SnackBarWidget]消失
-  void dismiss() async {
+  /// 隐藏SnackBar
+  void dismiss() {
     if (_controller.isDismissed) return;
-    try {
-      await _controller.reverse();
-    } on TickerCanceled {}
-  }
-
-  void _prepareAnimation() {
-    BuildContext context = _childKey.currentContext;
-    Container container = _childKey.currentWidget;
-    double height = context.size.height;
-    double top = container.margin.resolve(TextDirection.ltr).top;
-    double deltaY = height + top;
-    (_snackKey.currentWidget as SnackBarAnimation).prepare(deltaY);
+    (_snackKey.currentWidget as SnackBarAnimation).reverseAnimation();
   }
 }
 
@@ -137,12 +122,16 @@ class SnackBarWidgetState extends State<SnackBarWidget>
 typedef TextBuilder = Text Function(String message);
 
 class SnackBarAnimation extends StatelessWidget {
-  final Animation controller;
+  final AnimationController controller;
   final Container child;
   Animation<double> fade;
   Animation<double> translate;
 
-  SnackBarAnimation({Key key, this.controller, this.child}) : super(key: key);
+  SnackBarAnimation(
+      {@required GlobalKey key, @required this.controller, this.child})
+      : assert(key != null), // 由于需要通过BuildContext来获取Widget的高度，此处的key为必须的
+        assert(controller != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -153,25 +142,46 @@ class SnackBarAnimation extends StatelessWidget {
     );
   }
 
-  // 准备动画
-  void prepare(double deltaY) {
+  // 开始播放动画
+  Future<Null> playAnimation() async {
+    // 此处通过key去获取Widget的Size属性
+    var deltaY = (key as GlobalKey).currentContext.size.height; // 该值为位移动画需要的位移值
+
     // 如果fade动画不存在，则创建一个新的fade动画
     fade = fade ??
         Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: controller,
             curve: Interval(0.0, 0.3, // 持续时间为总持续时间的30%
                 curve: Curves.ease)));
-    // 如果translate动画不存在，则创建一个新的translate动画
+
     translate = translate ??
         Tween<double>(begin: -deltaY, end: 0).animate(CurvedAnimation(
-            parent: controller,
-            curve: Interval(0.0, 0.15))); // 前15%的时间用于执行平移动画
+            parent: controller, curve: Interval(0.0, 0.15))); // 前15%的时间用于执行平移动画
+
+    try {
+      await controller.forward().orCancel;
+      await controller.reverse().orCancel;
+    } on TickerCanceled {}
+  }
+
+  Future<Null> reverseAnimation() async {
+    try {
+      await controller.reverse().orCancel;
+    } on TickerCanceled {}
   }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     return Transform.translate(
-      child: Opacity(child: child, opacity: fade != null ? fade.value : 0), // 此处使用fade.value不断取值来刷新child的opacity
-      offset: Offset(0, translate != null ? translate.value : 0),// 此处使用translate.value不断取值来刷新child的偏移量
+      child: Opacity(
+          child: child,
+          opacity: fade != null
+              ? fade.value
+              : 0), // 此处使用fade.value不断取值来刷新child的opacity
+      offset: Offset(
+          0,
+          translate != null
+              ? translate.value
+              : 0), // 此处使用translate.value不断取值来刷新child的偏移量
     );
   }
 }
@@ -196,6 +206,7 @@ class _DynamicTextState extends State<_DynamicText> {
   }
 
   void update([String message]) {
+    if (message == _message) return; // 如果文案相同，则不刷新Text
     setState(() {
       _message = message;
     });
