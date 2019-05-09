@@ -46,7 +46,6 @@ class SnackBarWidget extends StatefulWidget {
 class SnackBarWidgetState extends State<SnackBarWidget>
     with TickerProviderStateMixin {
   final GlobalKey _snackKey = GlobalKey();
-  final GlobalKey _childKey = GlobalKey();
   GlobalKey<_DynamicTextState> _textKey;
 
   AnimationController _controller;
@@ -79,7 +78,6 @@ class SnackBarWidgetState extends State<SnackBarWidget>
             key: _snackKey,
             controller: _controller,
             child: Container(
-              key: _childKey,
               // 如果存在textBuilder，则创建_DynamicText，用来动态更新Text的内容
               // 如果不存在textBuilder，则使用静态的Text
               child: widget.textBuilder != null
