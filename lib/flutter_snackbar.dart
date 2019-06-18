@@ -143,8 +143,9 @@ class SnackBarAnimation extends StatelessWidget {
   // 开始播放动画
   Future<Null> playAnimation() async {
     // 此处通过key去获取Widget的Size属性
-    double deltaY =
-        (key as GlobalKey).currentContext.size.height; // 该值为位移动画需要的位移值
+    RenderBox renderBox = (key as GlobalKey).currentContext.findRenderObject();
+    Size size = renderBox.size;
+    double deltaY = size.height; // 该值为位移动画需要的位移值
 
     // 如果fade动画不存在，则创建一个新的fade动画
     fade = fade ??
