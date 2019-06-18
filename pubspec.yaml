@@ -1,6 +1,6 @@
 name: flutter_snackbar
 description: 用于在顶部显示提示的SnackBar。
-version: 0.0.2
+version: 0.0.3
 author: foolchen <chenchong8806@gmail.com>
 homepage: https://github.com/foolchen/flutter_snackbar
 
